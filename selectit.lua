@@ -77,10 +77,7 @@ function IO_Location()
 		smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2=171,1881,1204,2047
 		begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2=648,1802,905,2047
 		redx_x1,redx_y1,redx_x2,redx_y2=293,25,374,95
-
-		in_v_x1,in_v_y1,in_v_x2,in_v_y2=100,10,300,200
 		atall_x1,atall_y1,atall_x2,atall_y2=100,150,1350,1900
-
 	end
 end
 
@@ -633,7 +630,7 @@ function main()
 			click(map2wild_x,map2wild_y) --wild
 			mSleep(500)
 	
-			rx,ry=findImageInRegionFuzzy("in_v.png",90,atall_x1,atall_y1,atall_x2,atall_y2,0)
+			rx,ry=findImageInRegionFuzzy("in_v.png",90,0,0,IO_IDx,IO_IDy,0)
 			if rx==-1 and ry==-1 then
 				click(home2map_x,home2map_y) --2home
 				goto startbn
@@ -700,7 +697,7 @@ function main()
 			click(map2raptor_x,map2raptor_y)  --raptor
 			mSleep(500)
 	
-			rx,ry=findImageInRegionFuzzy("in_v.png",80,atall_x1,atall_y1,atall_x2,atall_y2,0)
+			rx,ry=findImageInRegionFuzzy("in_v.png",80,0,0,IO_IDx,IO_IDy,0)
 			if rx==-1 and ry==-1 then
 				closeApp("com.z2live.battlenations1")
 				goto startbn
@@ -775,7 +772,7 @@ function clearbigfoot()
 		
 		mSleep(2000)
 		
-		xx,xy=findImageInRegionFuzzy("redx_v.png",90,redx_x1,redx_y1,redx_x2,redx_y2,0)
+		xx,xy=findImageInRegionFuzzy("redx_v.png",90,0,0,IO_IDx,IO_IDy,0)
 		if xx~=-1 and xy~=-1 then
 			click(xx,xy)
 			waitForColor(abort_x,abort_y,abort_color,15)  --wait the grey button for 30 seconds
