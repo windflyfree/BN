@@ -1,47 +1,88 @@
-ehl={
-	{{x=474,y=1291},{x=580,y=1077},{x=687,y=862},{x=794,y=650},{x=900,y=437}},
-	{{x=368,y=1077},{x=474,y=862},{x=580,y=650},{x=687,y=437},{x=794,y=224}},
-	{{x=368,y=1077},{x=368,y=650},{x=474,y=437},{x=580,y=224},{x=794,y=224}},
-}
+function IO_ID()--识别分辨率，判断设备类型
+	IO_IDx,IO_IDy=getScreenSize() --横屏状态(长,宽)
+	mSleep(3000)
+	dialog("自动识别设备分辨率为: \n "..IO_IDx.."×"..IO_IDy,1)
+	if IO_IDx==640 and IO_IDy==960 then--iPhone4 iPhone4s
+		dialog("识别到您的设备为: \n iPhone4 iPhone4s",3)
+		IO_ID=1 --iPhone4、iPhone4s
+		dialog("暂不支持该设备,脚本停止! \n 请联系QQ:22515528",9)
+		mSleep(1000)
+		lua_exit()
+	elseif IO_IDx==640 and IO_IDy==1136 then--iPhone5 iPhone5s touch5
+		dialog("识别到您的设备为: \n iPhone5 iPhone5s touch5",3)
+		IO_ID=2 --iPhone5、iPhone5s
+		dialog("暂不支持该设备,脚本停止! \n 请联系QQ:22515528",9)
+		mSleep(1000)
+		lua_exit()
+	elseif IO_IDx==768 and IO_IDy==1024 then--iPad1 iPad2 iPad_Mini1
+		dialog("识别到您的设备为: \n iPad1 iPad2 iPad_Mini1",3)
+		IO_ID=3 --iPad1、iPad2、iPad Mini1
+		dialog("暂不支持该设备,脚本停止! \n 请联系QQ:22515528",9)
+		mSleep(1000)
+		lua_exit()
+	elseif IO_IDx==1536 and IO_IDy==2048 then--iPad3 iPad4 iPad_air iPad_Mini2
+		dialog("识别到您的设备为: \n iPad3 iPad4 iPad_air iPad_Mini2",3)
+		IO_ID=4 --iPad3、iPad4、iPad Mini2
+		IO_Location()
+	else
+		dialog("未找到相应设备,脚本停止! \n 请联系QQ:22515528",9)
+		mSleep(1000)
+		lua_exit()
+	end
+end
 
-hl={
-	{{x=635,y=1610},{x=740,y=1400},{x=840,y=1190},{x=950,y=965},{x=1060,y=770}},
-	{{x=740,y=1830},{x=840,y=1610},{x=950,y=1400},{x=1060,y=1190},{x=1170,y=970}},
-	{{x=950,y=1830},{x=950,y=1830},{x=1060,y=1610},{x=1170,y=1400},{x=1170,y=1400}},
-}
+function IO_Location()
+	if IO_ID==4 then
 
-unit_x=1475
-unit_y={2015,1860,1730,1600,1470,1340,1210,1080,950,820,690,560,430,300,170,40} 
+		ehl={
+			{{x=474,y=1291},{x=580,y=1077},{x=687,y=862},{x=794,y=650},{x=900,y=437}},
+			{{x=368,y=1077},{x=474,y=862},{x=580,y=650},{x=687,y=437},{x=794,y=224}},
+			{{x=368,y=1077},{x=368,y=650},{x=474,y=437},{x=580,y=224},{x=794,y=224}},
+		}
 
-unitselect_y=1975
-unitselect_x={all=1375,aircraft=1335,ignorable=1295,infect=1255,critters=1215,vehicles=1175,soldiers=1135}
+		hl={
+			{{x=635,y=1610},{x=740,y=1400},{x=840,y=1190},{x=950,y=965},{x=1060,y=770}},
+			{{x=740,y=1830},{x=840,y=1610},{x=950,y=1400},{x=1060,y=1190},{x=1170,y=970}},
+			{{x=950,y=1830},{x=950,y=1830},{x=1060,y=1610},{x=1170,y=1400},{x=1170,y=1400}},
+		}
 
-Skill_x=1480
-LBoary={1580,1350,1120,940}
+		unit_x=1475
+		unit_y={2015,1860,1730,1600,1470,1340,1210,1080,950,820,690,560,430,300,170,40} 
 
-LMammothy={1580,1450,1230,1000}
+		unitselect_y=1975
+		unitselect_x={all=1375,aircraft=1335,ignorable=1295,infect=1255,critters=1215,vehicles=1175,soldiers=1135}
 
-map_x={lefttop=512,leftbottom=1024,center=768,righttop=512,rightbottom=1024}
-map_y={lefttop=1360,leftbottom=1360,center=1024,righttop=680,rightbottom=680}
+		Skill_x=1480
+		LBoary={1580,1350,1120,940}
 
-abort_x,abort_y,abort_color=303,1867,14708992 
-victory_x,victory_y,victory_color=980,821,16315892
+		LMammothy={1580,1450,1230,1000}
 
-x_x,x_y,occ_x,occ_y,battle_x,battle_y=1420,400,895,1005,820,975
+		map_x={lefttop=512,leftbottom=1024,center=768,righttop=512,rightbottom=1024}
+		map_y={lefttop=1360,leftbottom=1360,center=1024,righttop=680,rightbottom=680}
 
-begin_x,begin_y=760,1910
-ok1_x,ok1_y,ok2_x,ok2_y=965,800,1015,780
+		abort_x,abort_y,abort_color=303,1867,14708992 
+		victory_x,victory_y,victory_color=980,821,16315892
 
-pull_x,pull_y=210,1985
-home2map_x,home2map_y,big2home_x,big2home_y=1410,65,1450,250
-map2big_x,map2big_y=150,800
+		x_x,x_y,occ_x,occ_y,battle_x,battle_y=1420,400,895,1005,820,975
 
-smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2=171,1881,1204,2047
-begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2=648,1802,905,2047
-redx_x1,redx_y1,redx_x2,redx_y2=293,25,374,95
+		begin_x,begin_y=760,1910
+		ok1_x,ok1_y,ok2_x,ok2_y=965,800,1015,780
 
-in_v_x1,in_v_y1,in_v_x2,in_v_y2=100,10,300,200
-atall_x1,atall_y1,atall_x2,atall_y2=100,150,1350,1900
+		pull_x,pull_y=210,1985
+		home2map_x,home2map_y,big2home_x,big2home_y=1410,65,1450,250
+		map2big_x,map2big_y=150,800
+		map2wild_x,map2wild_y=1260,780
+		map2raptor_x,map2raptor_y=900,1490
+
+		smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2=171,1881,1204,2047
+		begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2=648,1802,905,2047
+		redx_x1,redx_y1,redx_x2,redx_y2=293,25,374,95
+
+		in_v_x1,in_v_y1,in_v_x2,in_v_y2=100,10,300,200
+		atall_x1,atall_y1,atall_x2,atall_y2=100,150,1350,1900
+
+	end
+end
 
 function click(x,y,timeDown,timeUp)
 	if timeDown==nil or timeUp==nil then
@@ -260,14 +301,10 @@ function z_attacks()
 				return -1
 			end
 							
-		else
-		
-			return
-		
-		end
-		
-	end		
-	
+		else		
+			return		
+		end		
+	end			
 end
 	
 function homeattack()
@@ -493,10 +530,8 @@ function colorbigfoot(attacknumber)
 end
 	
 function main()
-	while true do 
-	
-		::startbn:: 
-	
+	while true do 	
+		::startbn:: 	
 		mSleep(5000) 
 		runApp("com.z2live.battlenations1") 
 		mSleep(15000) 
@@ -594,27 +629,17 @@ function main()
 		else				
 			mapZoomOut()
 	
-			mSleep(2000)
-			click(1260,780)
-			mSleep(2000)
+			mSleep(500)
+			click(map2wild_x,map2wild_y) --wild
+			mSleep(500)
 	
-			rx,ry=findImageInRegionFuzzy("in_v.png",90,1000,30,1330,300,0)
+			rx,ry=findImageInRegionFuzzy("in_v.png",90,atall_x1,atall_y1,atall_x2,atall_y2,0)
 			if rx==-1 and ry==-1 then
-				click(1450,65) --home
+				click(home2map_x,home2map_y) --2home
 				goto startbn
 			end
 	
 			click(rx,ry)
-			
-			ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
-
-			if ifadx==-1 and ifady==-1 then
-				click(ad1.x,ad1.y)
-				mSleep(2000)
-				click(ad2.x,ad2.y)
-				click(adsafe.x,adsafe.y)
-				mSleep(8000)
-			end	
 
 			ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,15)
 
@@ -671,11 +696,11 @@ function main()
 		
 			mapZoomOut()
 	
-			mSleep(2000)
-			click(900,1490)  --raptor
-			mSleep(2000)
+			mSleep(500)
+			click(map2raptor_x,map2raptor_y)  --raptor
+			mSleep(500)
 	
-			rx,ry=findImageInRegionFuzzy("in_v.png",80,800,300,1200,800,0)
+			rx,ry=findImageInRegionFuzzy("in_v.png",80,atall_x1,atall_y1,atall_x2,atall_y2,0)
 			if rx==-1 and ry==-1 then
 				closeApp("com.z2live.battlenations1")
 				goto startbn
@@ -802,6 +827,7 @@ function clearbigfoot()
 end
 
 function Selectit()
+	IO_ID()
 	init("0",0)	
 	mSleep(2000) 
 	ret = dialogRet("请选择攻击类型","取消","全体巡逻","大脚",10)
