@@ -16,7 +16,7 @@ unit_y={2015,1860,1730,1600,1470,1340,1210,1080,950,820,690,560,430,300,170,40}
 unitselect_y=1975
 unitselect_x={all=1375,aircraft=1335,ignorable=1295,infect=1255,critters=1215,vehicles=1175,soldiers=1135}
 
-Skillx=1480 
+Skill_x=1480
 LBoary={1580,1350,1120,940}
 
 LMammothy={1580,1450,1230,1000}
@@ -177,114 +177,82 @@ function findtheBigOne()
 end
 
 function z_attacks()
-	while true do
-		attackx,attacky=findImageInRegionFuzzy("attack_v.png",80,200,150,1350,1900,0) 
-		if attackx~=-1 and attacky~=-1 then	
-		
-			click(attackx,attacky)
+	require "patrol_config"
+	while true do	
+			
+		wolfx,wolfy=findImageInRegionFuzzy("attack_v.png",80,atall_x1,atall_y1,atall_x2,atall_y2,0) 		
+		if wolfx~=-1 and wolfy~=-1 then
+			
+			click(wolfx+50,wolfy+60)
 			mSleep(500)
-			click(attackx+119,attacky-87)
+			click(wolfx+119,wolfy-87)
 					
 			waitForImage("begin_grey_esv.png",90,begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,0,30) 
-			mSleep(300)
+			
+			for i=1,#(units) do
+				click(unitselect_x.all, unitselect_y)                -- unit category button
+				click(unitselect_x[units[i].cat], unitselect_y)      -- category
+    
+				pg=1                                              -- page
+				while pg<=units[i].page do
+					dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
+					mSleep(300)
+					pg=pg+1
+				end
+  
+				mSleep(300)
 
-			click(unitselect_x.all,unitselect_y)--[点选兵分类按钮]
-			click(unitselect_x.aircraft,unitselect_y)
-			mSleep(200)
-
-			click(unit_x,unit_y[16])
-
-			click(unitselect_x.all,unitselect_y)--[点选兵分类按钮]
-			mSleep(200)
-			click(unitselect_x.critters,unitselect_y)
-			mSleep(200)
-			for i=1,3 do
-				click(unit_x,unit_y[1],50,50)
+				for j=1,units[i].num do                           -- deploy the unit(s)
+					click(unit_x, unit_y[units[i].pos],10,15)
+				end
 			end
-			mSleep(200)	
+
 			click(begin_x,begin_y) --11 begin
 
-		
-	
-			waitForImage("abort_esv.png",90,298,1913,339,1940,0,15) 
-			
-			click(hl[2][3].x,hl[2][3].y)
-			click(Skillx,LBoary[2])
-			click(ehl[2][3].x,ehl[2][3].y)
-				
-			waitForImage("abort_esv.png",90,298,1913,339,1940,0,15) 
-			mSleep(800)
-
-			click(hl[1][3].x,hl[1][3].y)
-			click(Skillx,LMammothy[3])
-			beatit()
-
-
-	  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-	  		if rx1==victory_color then
-	  			goto vict
-	  		end
-
-			click(hl[1][2].x,hl[1][2].y)
-			click(Skillx,LMammothy[3])
-			beatit()
-
-	  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-	  		if rx1==victory_color then
-	  			goto vict
-	  		end
-
-			click(hl[1][4].x,hl[1][4].y)
-			click(Skillx,LMammothy[3])
-			beatit()
-				
-	  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-	  		if rx1==victory_color then
-	  			goto vict
-	  		end
-
-			click(hl[2][3].x,hl[2][3].y)
-			click(Skillx,LBoary[1])
-			beatit()
-
+			waitForColor(abort_x,abort_y,abort_color,15) 
 			while true do
-				
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-								
-				click(hl[1][3].x,hl[1][3].y)
-				click(Skillx,LMammothy[1])
-				beatit()
 
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
+				for i=1,#(a_seq) do
+			
+					mSleep(a_seq[i].time)
+		  
+					xx=hl[a_seq[i].row][a_seq[i].col].x     -- get unit position
+					yy=hl[a_seq[i].row][a_seq[i].col].y
+			
+					local xi=-1,yi,enemyxi,enemyyi
+					if a_seq[i].drag==true then
+						mSleep(200)
+						xi,yi,enemyxi,enemyyi=findtheBigOne()
+					end
 
-				click(hl[1][2].x,hl[1][2].y)
-				click(Skillx,LMammothy[1])
-				beatit()
+					click(xx,yy)                            -- activate unit
 
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
+					click(a_seq[i].wpx, a_seq[i].wpy)     -- switch weapon
+	      
+			
+					if xi~=-1  then             -- drag the aiming scope
+						dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,20)      -- indirect aim scope drag
+						dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,20)      -- maybe drag from 1,3
+						click(enemyxi,enemyyi)	
+					end		 
+		  
+					beatit()
 
-				click(hl[1][4].x,hl[1][4].y)
-				click(Skillx,LMammothy[1])
-				beatit()
-				
+					rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
+					if rx1==victory_color then
+						goto vict
+					end
+				end
 			end
 			
-			
 			::vict::
+
 			click(ok1_x,ok1_y) --23 ok
 			mSleep(1000)
 
 			click(ok2_x,ok2_y) --24 ok2
 			mSleep(500)
+
 						
 			ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,15)
 
@@ -295,12 +263,15 @@ function z_attacks()
 		else
 		
 			return
-					
+		
 		end
-	end
+		
+	end		
+	
 end
 	
 function homeattack()
+	require "home_config"
 	
 	while true do	
 			
@@ -312,114 +283,63 @@ function homeattack()
 			click(wolfx+119,wolfy-87)
 					
 			waitForImage("begin_grey_esv.png",90,begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,0,30) 
-			mSleep(500)
+			
+			for i=1,#(units) do
+				click(unitselect_x.all, unitselect_y)                -- unit category button
+				click(unitselect_x[units[i].cat], unitselect_y)      -- category
+    
+				pg=1                                              -- page
+				while pg<=units[i].page do
+					dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
+					mSleep(300)
+					pg=pg+1
+				end
+  
+				mSleep(300)
 
-			click(unitselect_x.all,unitselect_y)
-			mSleep(200)
-			click(unitselect_x.critters,unitselect_y)
-			mSleep(200)
-			for i=1,5 do
-				touchDown(unit_x,unit_y[1])
-				mSleep(50)
-				touchUp(unit_x,unit_y[1])
-				mSleep(50)
+				for j=1,units[i].num do                           -- deploy the unit(s)
+					click(unit_x, unit_y[units[i].pos],10,15)		
+				end
 			end
-			
-			click(unitselect_x.all,unitselect_y)
-			click(unitselect_x.aircraft,unitselect_y)
-			mSleep(200)
-	
-			for i=1,3 do
-				touchDown(unit_x,unit_y[16])
-				mSleep(50)
-				touchUp(unit_x,unit_y[16])
-				mSleep(50)
-			end
-			mSleep(200)	
-			
-			click(begin_x,begin_y) -- begin
-			
-			waitForColor(abort_x,abort_y,abort_color,15) 			
+
+			click(begin_x,begin_y) --11 begin
+
+			waitForColor(abort_x,abort_y,abort_color,15) 
 			while true do
-	
-				click(hl[2][3].x,hl[2][3].y)
-				click(Skillx,LBoary[2])
-				click(ehl[2][3].x,ehl[2][3].y)
 
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-				
-				mSleep(800)
+				for i=1,#(a_seq) do
+			
+					mSleep(a_seq[i].time)
+		  
+					xx=hl[a_seq[i].row][a_seq[i].col].x     -- get unit position
+					yy=hl[a_seq[i].row][a_seq[i].col].y
+			
+					local xi=-1,yi,enemyxi,enemyyi
+					if a_seq[i].drag==true then
+						mSleep(200)
+						xi,yi,enemyxi,enemyyi=findtheBigOne()
+					end
 
-				click(hl[1][1].x,hl[1][1].y)--[mm12]
-				click(Skillx,LMammothy[3])
-				beatit()
+					click(xx,yy)                            -- activate unit
 
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
+					click(a_seq[i].wpx, a_seq[i].wpy)     -- switch weapon
+	      
+			
+					if xi~=-1  then             -- drag the aiming scope
+						dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,20)      -- indirect aim scope drag
+						dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,20)      -- maybe drag from 1,3
+						click(enemyxi,enemyyi)	
+					end		 
+		  
+					beatit()
 
-				click(hl[1][2].x,hl[1][2].y)--[mm12]
-				click(Skillx,LMammothy[3])
-				beatit()
-
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-
-				click(hl[1][3].x,hl[1][3].y)
-				click(Skillx,LMammothy[3])
-				beatit()
-					
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-
-				click(hl[1][4].x,hl[1][4].y)--[mm12]
-				click(Skillx,LMammothy[3])
-				beatit()
-
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-
-				click(hl[1][5].x,hl[1][5].y)--[mm12]
-				click(Skillx,LMammothy[3])
-				beatit()
-
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-
-				click(hl[2][2].x,hl[2][2].y)
-			    beatit()
-
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-				
-				click(hl[2][3].x,hl[2][3].y)
-				click(Skillx,LBoary[1])
-			    beatit()
-				
-		  		rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
-		  		if rx1==victory_color then
-		  			goto vict
-		  		end
-				
-				click(hl[2][4].x,hl[2][4].y)
-			    beatit()
-				
+					rx1,rx2=waitForTwoColor(victory_x,victory_y,victory_color,abort_x,abort_y,abort_color,15)         
+					if rx1==victory_color then
+						goto vict
+					end
+				end
 			end
-
+			
 			::vict::
 
 			click(ok1_x,ok1_y) --23 ok
@@ -518,8 +438,8 @@ function colorbigfoot(attacknumber)
 	      
 			
 			if xi~=-1  then             -- drag the aiming scope
-				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,15)      -- indirect aim scope drag
-				--	      	dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,15)      -- maybe drag from 1,3
+				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,20)      -- indirect aim scope drag
+				dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,20)      -- maybe drag from 1,3
 				click(enemyxi,enemyyi)	
 			end		 
 		  
