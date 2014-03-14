@@ -81,25 +81,6 @@ function IO_Location()
 	end
 end
 
-function hex2RGB(c)
-  local r=math.modf(c/65536);
-  local g=math.modf(c/256)%256;
-  local b=c%256;
-  return r,g,b
-end
- 
-function colorCompareFuzzy(c, c1, diff)
-  local diff=diff or 20
-  local r,g,b = hex2RGB(c)
-  local r1,g1,b1 = hex2RGB(c1)
- 
-  if math.abs(r-r1)<=diff and math.abs(g-g1)<=diff and math.abs(b-b1)<=diff then
-    return true
-  else
-    return false
-  end
-end
-
 function click(x,y,timeDown,timeUp)
 	local timeDown=timeDown or 50
 	local timeUp=timeUp or 100
@@ -110,9 +91,7 @@ function click(x,y,timeDown,timeUp)
 end
 
 function dragDrop(x1,y1,x2,y2,b)
-	if b==nil then
-		b=10
-	end
+	b=b or 15
 	mSleep(80)
 	touchDown(x1,y1)
 	mSleep(70)
@@ -145,7 +124,7 @@ function waitForImage( imgFile,d,x1,y1,x2,y2,color,waitfor )
 	end
 end
 
-function waitForColor(color,d,x,y,waitfor )
+function waitForColor(color,d,x,y,waitfor)
   for i=1,waitfor*4 do
     mSleep(250)
     rx,ry = findColorInRegionFuzzy(color,d,x,y,x,y)
@@ -156,7 +135,7 @@ function waitForColor(color,d,x,y,waitfor )
   return -1,-1
 end
 
-function waitForTwoColor(color1,d1,x1,y1,color2,d2,x2,y2,waitfor )
+function waitForTwoColor(color1,d1,x1,y1,color2,d2,x2,y2,waitfor)
 	for i=1,waitfor*4 do
 		mSleep(250)
 	    rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
@@ -279,7 +258,7 @@ function z_attacks()
 					beatit()
 
 
-					local rx1,ry1,rx2,ry2,=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+					local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
 					if rx1~=-1 and ry1~=-1 then
 						goto vict
 					elseif rx1==-1 and rx2==-1 then
@@ -298,13 +277,11 @@ function z_attacks()
 
 						
 
-			local rx1,ry1,rx2,ry2,=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
-			if rx1~=-1 and ry1~=-1 then
-				goto vict
-			elseif rx1==-1 and rx2==-1 then
-				return -1,-1
-			end
-							
+			local ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
+
+			if ifadx==-1 and ifady==-1 then
+				return -1,-1				
+			end							
 		else		
 			return		
 		end		
@@ -345,7 +322,7 @@ function homeattack()
 
 			click(begin_x,begin_y) --11 begin
 
-			waitForColor(abort_x,abort_y,abort_color,15) 
+			waitForColor(abort_color,85,abort_x,abort_y,15) 
 			while true do
 
 				for i=1,#(a_seq) do
@@ -375,7 +352,7 @@ function homeattack()
 					beatit()
 
 
-					local rx1,ry1,rx2,ry2,=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+					local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
 					if rx1~=-1 and ry1~=-1 then
 						goto vict
 					elseif rx1==-1 and rx2==-1 then
@@ -394,21 +371,16 @@ function homeattack()
 
 						
 
-			local rx1,ry1,rx2,ry2,=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
-			if rx1~=-1 and ry1~=-1 then
-				goto vict
-			elseif rx1==-1 and rx2==-1 then
-				return -1,-1
-			end
+			local ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
+
+			if ifadx==-1 and ifady==-1 then
+				return -1,-1				
+			end	
 							
-		else
-		
-			return
-		
-		end
-		
+		else		
+			return 		
+		end		
 	end		
-	
 end
 
 function colorbigfoot(attacknumber)
@@ -491,7 +463,7 @@ function colorbigfoot(attacknumber)
 		  
 			beatit()
 
-			local rx1,ry1,rx2,ry2,=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+			local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
 			if rx1~=-1 and ry1~=-1 then
 				goto vict
 			elseif rx1==-1 and rx2==-1 then
@@ -523,7 +495,7 @@ function colorbigfoot(attacknumber)
 		local ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
 
 		if ifadx==-1 and ifady==-1 then
-			return				
+			return -1,-1				
 		end
 			
 		thetime=os.time()-thestarttime

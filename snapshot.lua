@@ -7,13 +7,11 @@ end
 
 mSleep(5000) 
 init("0",0)	
---		snapshot("attack_v.png",670,281,781,293)		
+	--snapshot("in_v.png",1178,129,1178+20,129+20)		
 		
 --409 593  520 506
 		
-attackx,attacky=findImageInRegionFuzzy("attack_v.png",80,200,150,1400,1900,0) 
+attackx,attacky=findImageInRegionFuzzy("in_v.png",80,0,0,1536-1,2048-1,0) 
 
 		
-click(attackx,attacky)
-mSleep(500)
-click(attackx+119,attacky-87)
+dialog(attackx..attacky,5)
