@@ -53,9 +53,6 @@ function IO_Location()
 		unitselect_x={all=1375,aircraft=1335,ignorable=1295,infect=1255,critters=1215,vehicles=1175,soldiers=1135}
 
 		Skill_x=1480
---		LBoary={1580,1350,1120,940}
-
---		LMammothy={1580,1450,1230,1000}
 
 		map_x={lefttop=512,leftbottom=1024,center=768,righttop=512,rightbottom=1024}
 		map_y={lefttop=1360,leftbottom=1360,center=1024,righttop=680,rightbottom=680}
