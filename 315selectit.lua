@@ -135,7 +135,7 @@ function waitForColor(color,d,x,y,waitfor)
   for i=1,waitfor*4 do
     mSleep(250)
 	keepScreen(true)	
-    rx,ry = findColorInRegionFuzzy(color,d,x,y,x,y)
+    local rx,ry = findColorInRegionFuzzy(color,d,x,y,x,y)
 	keepScreen(false)				
     if  rx~=-1 and ry~=-1 then
       return true
@@ -148,8 +148,8 @@ function waitForTwoColor(color1,d1,x1,y1,color2,d2,x2,y2,waitfor)
 	for i=1,waitfor*4 do
 		mSleep(250)
 		keepScreen(true)				
-	    rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
-	    rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
+	    local rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
+	    local rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
 		keepScreen(false)				
 	    if  rx1~=-1 or rx2~=-1 then
 	      return rx1,ry1,rx2,ry2
@@ -162,9 +162,9 @@ function waitFor3Color(color1,d1,x1,y1,color2,d2,x2,y2,color3,d3,x3,y3,waitfor)
 	for i=1,waitfor*4 do
 		mSleep(250)
 		keepScreen(true)
-	    rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
-	    rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
-		rx3,ry3 = findColorInRegionFuzzy(color3,d3,x3,y3,x3,y3)
+	    local rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
+	    local rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
+		local rx3,ry3 = findColorInRegionFuzzy(color3,d3,x3,y3,x3,y3)
 		keepScreen(false)				
 	    if  rx1~=-1 and rx2~=-1 and rx3~=-1 then
 	      return true
@@ -207,7 +207,8 @@ function mapZoomOut()
 end
 
 function findtheBigOne()
-	keepScreen(ture)				
+	keepScreen(ture)	
+	local i,j			
 	for i=1,3 do
 		for j=1,5 do
 			a=getColor(ehl[i][j].x-31,ehl[i][j].y-129)
