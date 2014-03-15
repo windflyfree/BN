@@ -53,9 +53,9 @@ function IO_Location()
 		unitselect_x={all=1375,aircraft=1335,ignorable=1295,infect=1255,critters=1215,vehicles=1175,soldiers=1135}
 
 		Skill_x=1480
-		LBoary={1580,1350,1120,940}
+--		LBoary={1580,1350,1120,940}
 
-		LMammothy={1580,1450,1230,1000}
+--		LMammothy={1580,1450,1230,1000}
 
 		map_x={lefttop=512,leftbottom=1024,center=768,righttop=512,rightbottom=1024}
 		map_y={lefttop=1360,leftbottom=1360,center=1024,righttop=680,rightbottom=680}
@@ -74,14 +74,30 @@ function IO_Location()
 		map2wild_x,map2wild_y=1260,780
 		map2raptor_x,map2raptor_y=900,1490
 
-		smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2=171,1881,1204,2047
-		begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2=648,1802,905,2047
-		redx_x1,redx_y1,redx_x2,redx_y2=293,25,374,95
-		atall_x1,atall_y1,atall_x2,atall_y2=100,150,1350,1800
-		in_x,in_x1,in_y1,in_color1,in_x2,in_y2,in_color2=0x54cc02,12,0,0x000e00,12,13,0xffffff
+		in_x=0xffffff
+		in_posandcolor="32|6|0xd8f6a1,2|35|0x293e04"
+		inbig_x,inbig_y=186,131
+		inwild_x,inwild_y=1176,131
+		inraptor_x,inraptor_y=993,713
+		atall_x=0x000000
+		atall_posandcolor="32|40|0xff8000,0|82|0x000000"
+		atwild_posandcolor="32|40|0xf5ab00,0|82|0x000000"
 		
-		map3x1,map3y1,map3x2,map3y2,map3x2,map3y2=1385,64,1405,43,1419,59
+		atall_x1,atall_y1,atall_x2,atall_y2=100,150,1450,1800
+		
+		map3x1,map3y1,map3x2,map3y2,map3x3,map3y3=1385,64,1405,43,1419,59
 		map3color1,map3color2,map3color3=0xd17902,0xe9b009,0x6fa13a
+		
+		lmap3x1,lmap3y1,lmap3x2,lmap3y2,lmap3x3,lmap3y3=1429,408,1470,374,1466,439
+		lmap3color1,lmap3color2,lmap3color3=0x7cef03,0xc1b9b1,0xd5ac8c
+		
+		world3x1,world3y1,world3x2,world3y2,world3x3,world3y3=1398,258,1422,240,1422,280
+		world3color1,world3color2,world3color3=0xffed8a,0x3172ff,0xd92207	
+		
+		begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,begin_grey_x3,begin_grey_y3=220,1987,225,2023,192,1994
+		begin_grey_color1,begin_grey_color2,begin_grey_color3=0xdedbd5,0x595043,0xbdb5a7
+		
+		redx_color,redx_x,redx_y=0xff6f00,334,61
 	end
 end
 
@@ -112,28 +128,20 @@ function dragDrop(x1,y1,x2,y2,b)
 	touchUp(x2,y2)
 end
 
-function waitForImage( imgFile,d,x1,y1,x2,y2,color,waitfor )
-
-	local xx=-1
-	local yy=-1
- 
-	for i=1,waitfor do
-		mSleep(1000)
-		xx,yy=findImageInRegionFuzzy(imgFile,d,x1,y1,x2,y2,color)
-		if (xx~=-1 and yy~=-1) then
-			mSleep(100)
-			return xx,yy
-		end
-		
-	end
+function getSkill(x,y)
+	local m
+	m=1775-130*x-95*y
+	return m
 end
 
 function waitForColor(color,d,x,y,waitfor)
   for i=1,waitfor*4 do
     mSleep(250)
+	keepScreen(true)	
     rx,ry = findColorInRegionFuzzy(color,d,x,y,x,y)
+	keepScreen(false)				
     if  rx~=-1 and ry~=-1 then
-      return rx,ry
+      return true
     end   
   end
   return false
@@ -142,8 +150,10 @@ end
 function waitForTwoColor(color1,d1,x1,y1,color2,d2,x2,y2,waitfor)
 	for i=1,waitfor*4 do
 		mSleep(250)
+		keepScreen(true)				
 	    rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
 	    rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
+		keepScreen(false)				
 	    if  rx1~=-1 or rx2~=-1 then
 	      return rx1,ry1,rx2,ry2
 	    end   
@@ -154,9 +164,11 @@ end
 function waitFor3Color(color1,d1,x1,y1,color2,d2,x2,y2,color3,d3,x3,y3,waitfor)
 	for i=1,waitfor*4 do
 		mSleep(250)
+		keepScreen(true)
 	    rx1,ry1 = findColorInRegionFuzzy(color1,d1,x1,y1,x1,y1)
 	    rx2,ry2 = findColorInRegionFuzzy(color2,d2,x2,y2,x2,y2)
 		rx3,ry3 = findColorInRegionFuzzy(color3,d3,x3,y3,x3,y3)
+		keepScreen(false)				
 	    if  rx1~=-1 and rx2~=-1 and rx3~=-1 then
 	      return true
 	    end   
@@ -216,14 +228,14 @@ function z_attacks()
 	require "patrol_config"
 	while true do	
 			
-		wolfx,wolfy=findImageInRegionFuzzy("attack_v.png",80,atall_x1,atall_y1,atall_x2,atall_y2,0) 		
+		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,atwild_posandcolor,90,atall_x1,atall_y1,atall_x2,atall_y2)		
 		if wolfx~=-1 and wolfy~=-1 then
-			
-			click(wolfx+50,wolfy+60)
-			mSleep(500)
-			click(wolfx+119,wolfy-87)
+			click(wolfx-35,wolfy-21)
+			mSleep(300)
+			click(wolfx-18,wolfy-121)
 					
-			waitForImage("begin_grey_esv.png",90,begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,0,30) 
+            waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,20)	
+			
 			
 			for i=1,#(units) do
 				click(unitselect_x.all, unitselect_y)                -- unit category button
@@ -245,7 +257,7 @@ function z_attacks()
 
 			click(begin_x,begin_y) --11 begin
 
-			waitForColor(abort_color,85,abort_x,abort_y,15) 
+			waitForColor(abort_color,85,abort_x,abort_y,30) 
 			while true do
 
 				for i=1,#(a_seq) do
@@ -275,11 +287,9 @@ function z_attacks()
 					beatit()
 
 
-					local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+					rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,20)         
 					if rx1~=-1 and ry1~=-1 then
 						goto vict
-					elseif rx1==false then
-						return false
 					end
 				end
 			end
@@ -294,8 +304,7 @@ function z_attacks()
 
 						
 
-			local ifwait=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
-
+			ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
 			if ifwait==false then
 				return false				
 			end							
@@ -310,14 +319,13 @@ function homeattack()
 	
 	while true do	
 			
-		wolfx,wolfy=findImageInRegionFuzzy("atall.png",80,atall_x1,atall_y1,atall_x2,atall_y2,0) 		
+		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,atall_posandcolor,90,atall_x1,atall_y1,atall_x2,atall_y2)		
 		if wolfx~=-1 and wolfy~=-1 then
-			
-			click(wolfx+50,wolfy+60)
-			mSleep(500)
-			click(wolfx+119,wolfy-87)
+			click(wolfx-35,wolfy-21)
+			mSleep(300)
+			click(wolfx-18,wolfy-121)
 					
-			waitForImage("begin_grey_esv.png",90,begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,0,30) 
+            waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,35)	
 			
 			for i=1,#(units) do
 				click(unitselect_x.all, unitselect_y)                -- unit category button
@@ -339,7 +347,7 @@ function homeattack()
 
 			click(begin_x,begin_y) --11 begin
 
-			waitForColor(abort_color,85,abort_x,abort_y,15) 
+			waitForColor(abort_color,85,abort_x,abort_y,20) 
 			while true do
 
 				for i=1,#(a_seq) do
@@ -369,11 +377,9 @@ function homeattack()
 					beatit()
 
 
-					local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+					rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
 					if rx1~=-1 and ry1~=-1 then
 						goto vict
-					elseif rx1==false then
-						return false
 					end
 				end
 			end
@@ -388,14 +394,13 @@ function homeattack()
 
 						
 
-			local ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
-
-			if ifadx==-1 and ifady==-1 then
-				return -1,-1				
+			ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,35)
+			if ifwait==false then
+				return false				
 			end	
 							
 		else		
-			return 	0	
+			return 	
 		end		
 	end		
 end
@@ -404,7 +409,7 @@ function colorbigfoot(attacknumber)
 	
 	require "bigfoot_config"
 	
-	waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x2,map3y2,35)
+	ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,35)
 			
 	allstarttime=os.time()
 	falsen=0
@@ -426,7 +431,7 @@ function colorbigfoot(attacknumber)
 		
 	
 		
-		waitForImage("begin_grey_esv.png",90,begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,0,30) --wait the grey button for 30 seconds
+        waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,15)	
 		
 		for i=1,#(units) do
 			click(unitselect_x.all, unitselect_y)                -- unit category button
@@ -451,7 +456,7 @@ function colorbigfoot(attacknumber)
 
 		click(begin_x,begin_y) --11 begin
 
-		waitForColor(abort_color,85,abort_x,abort_y,15)
+		waitForColor(abort_color,85,abort_x,abort_y,20)
 
 		for i=1,#(a_seq) do
 			
@@ -479,11 +484,9 @@ function colorbigfoot(attacknumber)
 		  
 			beatit()
 
-			local rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,15)         
+			rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,20)         
 			if rx1~=-1 and ry1~=-1 then
 				goto vict
-			elseif rx1==-1 and rx2==-1 then
-				return false
 			end
 		end
 			
@@ -508,7 +511,7 @@ function colorbigfoot(attacknumber)
 		mSleep(2000)
 		
 				
-		local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x2,map3y2,35)
+		ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
 
 		if ifwait==false then
 			return false				
@@ -533,17 +536,29 @@ function main()
 		::startbn:: 	
 		mSleep(5000) 
 		runApp("com.z2live.battlenations1") 
-		mSleep(15000) 
 		init("0",0)
+		mSleep(15000) 
+		click(0,0)
 		
-		--(5,5)
-
-		local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x2,map3y2,35)
+		ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,55)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
 			
 		end
+		
+		rx,ry = findColorInRegionFuzzy(redx_color,90,redx_x,redx_y,redx_x,redx_y)
+		if rx~=-1 and ry~=-1 then
+			click(rx,ry)
+			waitForColor(abort_color,85,abort_x,abort_y,30)  --wait the grey button for 30 seconds
+			for i=1,2 do--[three pull]
+				click(pull_x,pull_y)
+				mSleep(200)
+			end
+				
+			closeApp("com.z2live.battlenations1")
+			goto startbn
+		end		
 		
 		for i=1,2 do
 			mapZoomOut()
@@ -620,29 +635,21 @@ function main()
 						
 		click(home2map_x,home2map_y)--home click world map
 					
-		ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
-
-		if ifadx==-1 and ifady==-1 then
+	    ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,20)
+		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
 		else				
 			mapZoomOut()
 	
-			mSleep(500)
+			mSleep(200)
 			click(map2wild_x,map2wild_y) --wild
-			mSleep(500)
+			mSleep(300)
 	
-			rx,ry = findMultiColorInRegionFuzzy(in_x,"in_x1|in_y1|in_color1,in_x2|in_y2|in_color2",90,0,0,IO_IDx-1,map2wild_y)
-			if rx==-1 and ry==-1 then
-				closeApp("com.z2live.battlenations1")
-				goto startbn
-			end
-	
-			click(rx,ry)
+			click(inwild_x,inwild_y)
 
-			local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x2,map3y2,15)
+			ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
 			if ifwait==false then
-
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
 				goto startbn
@@ -675,7 +682,7 @@ function main()
 		click(big2home_x,big2home_y) -- to home
 		
 		
-		local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,15)
+		ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,20)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -684,7 +691,7 @@ function main()
 		click(home2map_x,home2map_y)--home click world map
 		
 	
-		local ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,15)
+		ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,20)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -695,16 +702,10 @@ function main()
 			mSleep(500)
 			click(map2raptor_x,map2raptor_y)  --raptor
 			mSleep(500)
-	
-			rx,ry = findMultiColorInRegionFuzzy(in_x,"in_x1|in_y1|in_color1,in_x2|in_y2|in_color2",90,0,0,IO_IDx-1,map2raptor_y)
-			if rx==-1 and ry==-1 then
-				closeApp("com.z2live.battlenations1")
-				goto startbn
-			end
-	
-			click(rx,ry)
+			
+			click(inraptor_x,inraptor_y)
 		
-			local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,35)
+			ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
 			if ifwait==false then
 				closeApp("com.z2live.battlenations1")
 				goto startbn
@@ -717,7 +718,7 @@ function main()
 					mSleep(5000)
 					goto startbn
 				end				
-				dragDrop(map_x.lefttop,map_y.lefttop,map_x.righttop,map_y.righttop,10)
+				dragDrop(map_x.lefttop,map_y.lefttop,map_x.righttop,map_y.righttop)
 			end
 		
 			for i=1,3 do		
@@ -727,31 +728,20 @@ function main()
 					mSleep(5000)
 					goto startbn
 				end				
-				dragDrop(map_x.rightbottom,map_y.rightbottom,map_x.leftbottom,map_y.leftbottom,10)
+				dragDrop(map_x.rightbottom,map_y.rightbottom,map_x.leftbottom,map_y.leftbottom)
 			end
 			
 			
-			end 				--raptor
+		end 				--raptor
 					
 		click(big2home_x,big2home_y) -- to home
 		
 						
-		local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x2,map3y2,35)
+		ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,20)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
-		end
-		
-		click(home2map_x,home2map_y)	--home click world map
-		
-
-		ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,15)
-		
-		if ifadx==-1 and ifady==-1 then
-			closeApp("com.z2live.battlenations1")
-			goto startbn
-		end	
-		
+		end		
 		clearbigfoot()
 	end	
 end	
@@ -764,9 +754,9 @@ function clearbigfoot()
 		mSleep(15000) 
 		init("0",0)	
 		
-		--click(5,5)	
+		click(0,0)	
 		
-		local ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,35)
+	    ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,55)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -774,55 +764,45 @@ function clearbigfoot()
 		
 		mSleep(2000)
 		
-		xx,xy=findImageInRegionFuzzy("redx_v.png",80,redx_x1,redx_y1,redx_x2,redx_y2,0)
-		if xx~=-1 and xy~=-1 then
-			click(xx,xy)
-			waitForColor(abort_color,85,abort_x,abort_y,15)  --wait the grey button for 30 seconds
+		rx,ry = findColorInRegionFuzzy(redx_color,90,redx_x,redx_y,redx_x,redx_y)		
+		if rx~=-1 and ry~=-1 then
+			click(rx,ry)
+			waitForColor(abort_color,85,abort_x,abort_y,30)  --wait the grey button for 30 seconds
 			for i=1,2 do--[three pull]
 				click(pull_x,pull_y)
 				mSleep(200)
 			end
-			mSleep(5000)
-	
-			click(ok1_x,ok1_y) --23 ok
-			mSleep(300)
-
-			click(ok2_x,ok2_y) --24 ok2
-			mSleep(200)		
-			goto bigfoot
+				
+			closeApp("com.z2live.battlenations1")
+			goto startbn
 		end			
 
 		
 		click(home2map_x,home2map_y)							
 
 		mSleep(5000)
-		ifadx,ifady=waitForImage("smallhouse_v.png",90,smallhouse_x1,smallhouse_y1,smallhouse_x2,smallhouse_y2,0,30)
-		if ifadx==-1 and ifady==-1 then
+		ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,30)
+		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
 		end
 		
 		mapZoomOut()
 	
-		mSleep(500)
+		mSleep(300)
 	
-		dragDrop(map_x.righttop,map_y.righttop,map_x.leftbottom,map_y.leftbottom,10)
+		dragDrop(map_x.righttop,map_y.righttop,map_x.leftbottom,map_y.leftbottom)
 	
-		mSleep(500)
+		mSleep(300)
 		click(map2big_x,map2big_y)
-		mSleep(500)
-	
-		--1165,133,   1187,133,   1187,146
-		rx,ry = findMultiColorInRegionFuzzy(in_x,"in_x1|in_y1|in_color1,in_x2|in_y2|in_color2",90,0,0,IO_IDx-1,map2big_y)
-		if rx==-1 and ry==-1 then
-			closeApp("com.z2live.battlenations1")	
-			goto startbn
-		end	
-		click(rx,ry)								
+		mSleep(300)
+		
+		click(inbig_x,inbig_y)								
 		
 		::bigfoot::	
-		colorbigfoot(2000)	
+		colorbigfoot(100)	
 		closeApp("com.z2live.battlenations1")	
+		main()
 	end
 end
 
@@ -849,9 +829,4 @@ function Selectit()
 end
 
 Selectit()
-
---colorbigfoot(1000)
-
-
-
 

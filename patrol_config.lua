@@ -1,17 +1,3 @@
-function getSkill(x,y)
-	local m
-	m=1775-130*x-95*y
-	return m
-end
-
-
-function count(m)
-	atackscount=1
-	while m[atackscount+1]~=nil do
-		atackscount=atackscount+1
-	end
-	return atackscount
-end
 
 
 --             category  ,page  ,pos  ,number
