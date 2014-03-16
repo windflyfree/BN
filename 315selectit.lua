@@ -242,11 +242,11 @@ function z_attacks()
 				pg=1                                              -- page
 				while pg<=units[i].page do
 					dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
-					mSleep(300)
+					mSleep(500)
 					pg=pg+1
 				end
   
-				mSleep(300)
+				mSleep(500)
 
 				for j=1,units[i].num do                           -- deploy the unit(s)
 					click(unit_x, unit_y[units[i].pos],10,15)
@@ -323,7 +323,7 @@ function homeattack()
 			mSleep(300)
 			click(wolfx-18,wolfy-121)
 					
-            waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,35)	
+            			waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,35)	
 			
 			for i=1,#(units) do
 				click(unitselect_x.all, unitselect_y)                -- unit category button
@@ -332,11 +332,11 @@ function homeattack()
 				pg=1                                              -- page
 				while pg<=units[i].page do
 					dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
-					mSleep(300)
+					mSleep(500)
 					pg=pg+1
 				end
   
-				mSleep(300)
+				mSleep(500)
 
 				for j=1,units[i].num do                           -- deploy the unit(s)
 					click(unit_x, unit_y[units[i].pos],10,15)		
@@ -438,11 +438,11 @@ function colorbigfoot(attacknumber)
 			pg=1                                              -- page
 			while pg<=units[i].page do
 				dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
-				mSleep(300)
+				mSleep(500)
 				pg=pg+1
 			end
   
-			mSleep(300)
+			mSleep(500)
 
 			for j=1,units[i].num do                           -- deploy the unit(s)
 				touchDown(unit_x, unit_y[units[i].pos])
