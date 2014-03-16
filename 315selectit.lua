@@ -236,6 +236,7 @@ function z_attacks()
 			
 			
 			for i=1,#(units) do
+				mSleep(200)
 				click(unitselect_x.all, unitselect_y)                -- unit category button
 				click(unitselect_x[units[i].cat], unitselect_y)      -- category
     
@@ -249,7 +250,7 @@ function z_attacks()
 				mSleep(500)
 
 				for j=1,units[i].num do                           -- deploy the unit(s)
-					click(unit_x, unit_y[units[i].pos],10,15)
+					click(unit_x, unit_y[units[i].pos],20,25)
 				end
 			end
 
@@ -325,6 +326,8 @@ function homeattack()
 					
             			waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,35)	
 			
+			mSleep(200)
+			
 			for i=1,#(units) do
 				click(unitselect_x.all, unitselect_y)                -- unit category button
 				click(unitselect_x[units[i].cat], unitselect_y)      -- category
@@ -339,7 +342,7 @@ function homeattack()
 				mSleep(500)
 
 				for j=1,units[i].num do                           -- deploy the unit(s)
-					click(unit_x, unit_y[units[i].pos],10,15)		
+					click(unit_x, unit_y[units[i].pos],20,25)		
 				end
 			end
 
@@ -445,10 +448,7 @@ function colorbigfoot(attacknumber)
 			mSleep(500)
 
 			for j=1,units[i].num do                           -- deploy the unit(s)
-				touchDown(unit_x, unit_y[units[i].pos])
-				mSleep(10)
-				touchUp(unit_x, unit_y[units[i].pos])
-				mSleep(15)
+				click(unit_x, unit_y[units[i].pos],20,25)
 			end
 		end
 

@@ -1,4 +1,5 @@
-
+units={}
+a_seq={}
 
 --             category  ,page  ,pos  ,number
 units = { {cat="critters",page=0,pos=1,num=3},              -- mammoth
