@@ -71,28 +71,31 @@ function IO_Location()
 		map2wild_x,map2wild_y=1260,780
 		map2raptor_x,map2raptor_y=900,1490
 
-		in_x=0xffffff
-		in_posandcolor="32|6|0xd8f6a1,2|35|0x293e04"
 		inbig_x,inbig_y=186,131
 		inwild_x,inwild_y=1176,131
 		inraptor_x,inraptor_y=993,713
 		atall_x=0x000000
-		atall_posandcolor="32|40|0xff8000,0|82|0x000000"
-		atwild_posandcolor="32|40|0xf5ab00,0|82|0x000000"
+		home_posandcolor="32|40|0xff8000,0|82|0x000000"
+		jungle_posandcolor="32|40|0xf5ab00,0|82|0x000000"
 		
 		atall_x1,atall_y1,atall_x2,atall_y2=100,150,1450,1800
 		
-		map3x1,map3y1,map3x2,map3y2,map3x3,map3y3=1385,64,1405,43,1419,59
-		map3color1,map3color2,map3color3=0xd17902,0xe9b009,0x6fa13a
+		homeMapColor={{0xd17902,1385,64},
+		              {0xe9b009,1405,43},
+			          {0x6fa13a,1419,59}}
 		
-		lmap3x1,lmap3y1,lmap3x2,lmap3y2,lmap3x3,lmap3y3=1429,408,1470,374,1466,439
-		lmap3color1,lmap3color2,lmap3color3=0x7cef03,0xc1b9b1,0xd5ac8c
+		jungleMapColor={{0x7cef03,1429,408},
+					    {0xc1b9b1,1470,374},
+					    {0xd5ac8c,1466,439}}
 		
-		world3x1,world3y1,world3x2,world3y2,world3x3,world3y3=1398,258,1422,240,1422,280
-		world3color1,world3color2,world3color3=0xffed8a,0x3172ff,0xd92207	
+		worldMapColor={{0xffed8a,1398,258},
+					   {0x3172ff,1422,240},
+					   {0xd92207,1422,280}}
 		
-		begin_grey_x1,begin_grey_y1,begin_grey_x2,begin_grey_y2,begin_grey_x3,begin_grey_y3=220,1987,225,2023,192,1994
-		begin_grey_color1,begin_grey_color2,begin_grey_color3=0xdedbd5,0x595043,0xbdb5a7
+		begin_grey_Color={{0xdedbd5,220,1987},
+						  {0x595043,225,2023},
+						  {0xbdb5a7,192,1994}}
+		
 		
 		redx_color,redx_x,redx_y=0xff6f00,334,61
 	end
@@ -119,7 +122,7 @@ function dragDrop(x1,y1,x2,y2,b)
 		mSleep(15)
 	end	
 	touchMove(x2-1,y2-1)
-	mSleep(15)
+	mSleep(30)
 	touchMove(x2,y2)
 	mSleep(150)
 	touchUp(x2,y2)
@@ -159,7 +162,6 @@ function waitForTwoColor(color1,d1,x1,y1,color2,d2,x2,y2,waitfor)
 end
 
 function waitFor3Color(img,diff,waitfor)
-	diff=diff or 95			
 		   					   
 	for i=1,waitfor*4 do
 		mSleep(250)
@@ -167,7 +169,7 @@ function waitFor3Color(img,diff,waitfor)
 		
 		for j=1,#(img) do
 			rx={}
-	   		rx[j] = findColorInRegionFuzzy(img[j][1],diff,img[j][2],img[j][3],diff,img[j][2],img[j][3])
+	   		rx[j] = findColorInRegionFuzzy(img[j][1],diff,img[j][2],img[j][3],img[j][2],img[j][3])
 		    m=j
 			if rx[j]==-1 then
 				break
@@ -179,6 +181,7 @@ function waitFor3Color(img,diff,waitfor)
 		
 		if m==#(img)+1 then
 			return ture
+
 		end
 	end
 	return false
@@ -233,20 +236,20 @@ function findtheBigOne()
 	return -1,-1
 end
 
-function deployTroop(units)
-	
+function deployTroop(units)	
 	for i=1,#(units) do
 		click(unitselect_x.all, unitselect_y)                -- unit category button
 		click(unitselect_x[units[i].cat], unitselect_y)      -- category
 
 		pg=1                                              -- page
 		while pg<=units[i].page do
+			mSleep(800)
 			dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
-			mSleep(500)
+			mSleep(300)
 			pg=pg+1
 		end
 
-		mSleep(500)
+		mSleep(300)
 
 		for j=1,units[i].num do                           -- deploy the unit(s)
 			click(unit_x, unit_y[units[i].pos],20,25)		
@@ -256,8 +259,8 @@ end
 
 function proceedAttackSequence(a_seq)
 	click(begin_x,begin_y)
-	waitForColor(abort_color,85,abort_x,abort_y,20) 
-	while true do
+	waitForColor(abort_color,85,abort_x,abort_y,30) 
+	for i=1,2 do
 
 		for i=1,#(a_seq) do
 
@@ -278,8 +281,8 @@ function proceedAttackSequence(a_seq)
 
 
 			if xi~=-1  then             -- drag the aiming scope
-				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,20)      -- indirect aim scope drag
-				dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,20)      -- maybe drag from 1,3
+				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,30)      -- indirect aim scope drag
+				dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,30)      -- maybe drag from 1,3
 				click(enemyxi,enemyyi)	
 			end		 
 
@@ -293,6 +296,12 @@ function proceedAttackSequence(a_seq)
 		end
 	end
 
+	for i=1,2 do--[three pull]
+		click(pull_x,pull_y)
+		mSleep(200)
+	end
+	mSleep(5000)
+	
 	::vict::
 
 	click(ok1_x,ok1_y) --23 ok
@@ -303,29 +312,23 @@ function proceedAttackSequence(a_seq)
 
 end
 
-function z_attacks()
-	require "patrol_config"
+function jungle_attacks()
+	require "jungle_config"
 	while true do	
 			
-		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,atwild_posandcolor,90,atall_x1,atall_y1,atall_x2,atall_y2)		
+		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,jungle_posandcolor,90,atall_x1,atall_y1,atall_x2,atall_y2)		
 		if wolfx~=-1 and wolfy~=-1 then
 			click(wolfx-35,wolfy-21)
-			mSleep(300)
+			mSleep(100)
 			click(wolfx-18,wolfy-121)
 					
-			waitFor3Color({{begin_grey_color1,begin_grey_x1,begin_grey_y1},
-						  {begin_grey_color2,begin_grey_x2,begin_grey_y2},
-						  {begin_grey_color3,begin_grey_x3,begin_grey_y3}},
-						  95,35)	
+			waitFor3Color(begin_grey_Color,95,35)	
 			
-			deployTroop(units)
+			deployTroop(jungle_units)
 			
-			proceedAttackSequence(attackSequence)
+			proceedAttackSequence(jungle_a_seq)
 						
-			ifwait=waitFor3Color({{lmap3color1,lmap3x1,lmap3y1},
-								 {lmap3color2,lmap3x2,lmap3y2},
-								 {lmap3color3,lmap3x3,lmap3y3}},
-								 95,35)						
+			ifwait=waitFor3Color(jungleMapColor,95,35)						
 
 			if ifwait==false then
 				return false				
@@ -336,30 +339,24 @@ function z_attacks()
 	end			
 end
 	
-function homeattack()
+function home_attacks()
 	require "home_config"
 	
 	while true do	
 			
-		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,atall_posandcolor,90,atall_x1,atall_y1,atall_x2,atall_y2)		
+		wolfx,wolfy = findMultiColorInRegionFuzzy(atall_x,home_posandcolor,95,atall_x1,atall_y1,atall_x2,atall_y2)		
 		if wolfx~=-1 and wolfy~=-1 then
 			click(wolfx-35,wolfy-21)
-			mSleep(300)
+			mSleep(100)
 			click(wolfx-18,wolfy-121)
 					
-			waitFor3Color({{begin_grey_color1,begin_grey_x1,begin_grey_y1},
-						  {begin_grey_color2,begin_grey_x2,begin_grey_y2},
-						  {begin_grey_color3,begin_grey_x3,begin_grey_y3}},
-						  95,35)
+			waitFor3Color(begin_grey_Color,95,35)
 			
-			deployTroop(units)
+			deployTroop(home_units)
 			
-			proceedAttackSequence(attackSequence)
+			proceedAttackSequence(home_a_seq)
 						
-			ifwait=waitFor3Color({{map3color1,map3x1,map3y1},
-								 {map3color2,map3x2,map3y2},
-								 {map3color3,map3x3,map3y3}},
-								 95,35)
+			ifwait=waitFor3Color(homeMapColor,95,35)
 								 
 			if ifwait==false then
 				return false				
@@ -371,11 +368,11 @@ function homeattack()
 	end		
 end
 
-function colorbigfoot(attacknumber)
+function bigfoot_attacks(attacknumber)
 	
 	require "bigfoot_config"
 	
-	ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,35)
+	ifwait=waitFor3Color(jungleMapColor,95,35)
 			
 	allstarttime=os.time()
 	falsen=0
@@ -395,31 +392,15 @@ function colorbigfoot(attacknumber)
 
 		click(battle_x,battle_y) --3 battle
 		
+		waitFor3Color(begin_grey_Color,95,35)
 	
+		deployTroop(bigfoot_units)
 		
-        waitFor3Color(begin_grey_color1,90,begin_grey_x1,begin_grey_y1,begin_grey_color2,90,begin_grey_x2,begin_grey_y2,begin_grey_color3,90,begin_grey_x3,begin_grey_y3,15)	
-		
-		for i=1,#(units) do
-			click(unitselect_x.all, unitselect_y)                -- unit category button
-			click(unitselect_x[units[i].cat], unitselect_y)      -- category
-    
-			pg=1                                              -- page
-			while pg<=units[i].page do
-				dragDrop(unit_x,unit_y[16],unit_x,unit_y[1],20)
-				mSleep(500)
-				pg=pg+1
-			end
-  
-			mSleep(500)
-
-			for j=1,units[i].num do                           -- deploy the unit(s)
-				click(unit_x, unit_y[units[i].pos],20,25)
-			end
-		end
-
 		click(begin_x,begin_y) --11 begin
 
-		waitForColor(abort_color,85,abort_x,abort_y,20)
+		waitForColor(abort_color,85,abort_x,abort_y,30)
+		
+		a_seq=bigfoot_a_seq
 
 		for i=1,#(a_seq) do
 			
@@ -440,14 +421,14 @@ function colorbigfoot(attacknumber)
 	      
 			
 			if xi~=-1  then             -- drag the aiming scope
-				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,20)      -- indirect aim scope drag
-				dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,20)      -- maybe drag from 1,3
+				dragDrop(ehl[2][3].x,ehl[2][3].y,enemyxi,enemyyi,30)      -- indirect aim scope drag
+				dragDrop(ehl[1][3].x,ehl[1][3].y,enemyxi,enemyyi,30)      -- maybe drag from 1,3
 				click(enemyxi,enemyyi)	
 			end		 
 		  
 			beatit()
 
-			rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,20)         
+			rx1,ry1,rx2,ry2=waitForTwoColor(victory_color,85,victory_x,victory_y,abort_color,85,abort_x,abort_y,30)         
 			if rx1~=-1 and ry1~=-1 then
 				goto vict
 			end
@@ -474,7 +455,7 @@ function colorbigfoot(attacknumber)
 		mSleep(2000)
 		
 				
-		ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
+		ifwait=waitFor3Color(jungleMapColor,95,30)
 
 		if ifwait==false then
 			return false				
@@ -503,10 +484,7 @@ function main()
 		mSleep(15000) 
 		click(0,0)
 		
-		ifwait=waitFor3Color({{map3color1,map3x1,map3y1},
-							 {map3color2,map3x2,map3y2},
-							 {map3color3,map3x3,map3y3}},
-							 95,55)
+		ifwait=waitFor3Color(homeMapColor,95,55)
 							 
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
@@ -532,7 +510,7 @@ function main()
 		
 			for i=1,3 do
 			
-				homefalse=homeattack()
+				homefalse=home_attacks()
 				if homefalse==false then
 					closeApp("com.z2live.battlenations1")
 					mSleep(5000)
@@ -542,7 +520,7 @@ function main()
 				dragDrop(map_x.lefttop,map_y.lefttop,map_x.rightbottom,map_y.rightbottom,10)
 			end
 	
-			homefalse=homeattack()
+			homefalse=home_attacks()
 			if homefalse==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -551,7 +529,7 @@ function main()
 			
 			dragDrop(map_x.leftbottom,map_y.leftbottom,map_x.righttop,map_y.righttop,10)
 			
-			homefalse=homeattack()
+			homefalse=home_attacks()
 			if homefalse==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -563,7 +541,7 @@ function main()
 
 			for i=1,3 do
 				
-				homefalse=homeattack()
+				homefalse=home_attacks()
 				if homefalse==false then
 					closeApp("com.z2live.battlenations1")
 					mSleep(5000)
@@ -573,7 +551,7 @@ function main()
 				dragDrop(map_x.rightbottom,map_y.rightbottom,map_x.lefttop,map_y.lefttop,10)
 			end
 	
-			homefalse=homeattack()
+			homefalse=home_attacks()
 			if homefalse==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -582,7 +560,7 @@ function main()
 			
 			dragDrop(map_x.righttop,map_y.righttop,map_x.leftbottom,map_y.leftbottom,10)
 			
-			homefalse=homeattack()
+			homefalse=home_attacks()
 			if homefalse==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -591,7 +569,7 @@ function main()
 			
 			dragDrop(map_x.righttop,map_y.righttop,map_x.leftbottom,map_y.leftbottom,10)
 			
-			homefalse=homeattack()
+			homefalse=home_attacks()
 			if homefalse==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -602,7 +580,7 @@ function main()
 						
 		click(home2map_x,home2map_y)--home click world map
 					
-	    ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,20)
+	    ifwait=waitFor3Color(worldMapColor,95,30)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -615,7 +593,7 @@ function main()
 	
 			click(inwild_x,inwild_y)
 
-			ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
+			ifwait=waitFor3Color(jungleMapColor,95,30)
 			if ifwait==false then
 				closeApp("com.z2live.battlenations1")
 				mSleep(5000)
@@ -623,8 +601,8 @@ function main()
 			else	
 		
 				for i=1,3 do		
-					wildfalse=z_attacks()
-					if wildfalse==false then
+					junglefalse=jungle_attacks()
+					if junglefalse==false then
 						closeApp("com.z2live.battlenations1")
 						mSleep(5000)
 						goto startbn
@@ -633,8 +611,8 @@ function main()
 				end
 		
 				for i=1,3 do		
-					wildfalse=z_attacks()
-					if wildfalse==false then
+					junglefalse=jungle_attacks()
+					if junglefalse==false then
 						closeApp("com.z2live.battlenations1")
 						mSleep(5000)
 						goto startbn
@@ -649,10 +627,7 @@ function main()
 		click(big2home_x,big2home_y) -- to home
 		
 		
-		ifwait=waitFor3Color({{map3color1,map3x1,map3y1},
-							 {map3color2,map3x2,map3y2},
-							 {map3color3,map3x3,map3y3}},
-							 95,35)
+		ifwait=waitFor3Color(homeMapColor,95,35)
 
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
@@ -662,10 +637,7 @@ function main()
 		click(home2map_x,home2map_y)--home click world map
 		
 	
-		ifwait=waitFor3Color({{world3color1,world3x1,world3y1},
-							 {world3color2,world3x2,world3y2},
-							 {world3color3,world3x3,world3y3}},
-							 90,20)
+		ifwait=waitFor3Color(worldMapColor,95,30)
 							 
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
@@ -680,15 +652,15 @@ function main()
 			
 			click(inraptor_x,inraptor_y)
 		
-			ifwait=waitFor3Color(lmap3color1,90,lmap3x1,lmap3y1,lmap3color2,90,lmap3x2,lmap3y2,lmap3color3,90,lmap3x3,lmap3y3,20)
+			ifwait=waitFor3Color(jungleMapColor,95,30)
 			if ifwait==false then
 				closeApp("com.z2live.battlenations1")
 				goto startbn
 			end
 		
 			for i=1,3 do		
-				wildfalse=z_attacks()
-				if wildfalse==false then
+				junglefalse=jungle_attacks()
+				if junglefalse==false then
 					closeApp("com.z2live.battlenations1")
 					mSleep(5000)
 					goto startbn
@@ -697,8 +669,8 @@ function main()
 			end
 		
 			for i=1,3 do		
-				wildfalse=z_attacks()
-				if wildfalse==false then
+				junglefalse=jungle_attacks()
+				if junglefalse==false then
 					closeApp("com.z2live.battlenations1")
 					mSleep(5000)
 					goto startbn
@@ -712,7 +684,7 @@ function main()
 		click(big2home_x,big2home_y) -- to home
 		
 						
-		ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,20)
+		ifwait=waitFor3Color(homeMapColor,95,30)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -731,7 +703,7 @@ function clearbigfoot()
 		
 		click(0,0)	
 		
-	    ifwait=waitFor3Color(map3color1,90,map3x1,map3y1,map3color2,90,map3x2,map3y2,map3color3,90,map3x3,map3y3,55)
+	    ifwait=waitFor3Color(homeMapColor,95,55)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -756,7 +728,7 @@ function clearbigfoot()
 		click(home2map_x,home2map_y)							
 
 		mSleep(5000)
-		ifwait=waitFor3Color(world3color1,90,world3x1,world3y1,world3color2,90,world3x2,world3y2,world3color3,90,world3x3,world3y3,30)
+		ifwait=waitFor3Color(worldMapColor,95,30)
 		if ifwait==false then
 			closeApp("com.z2live.battlenations1")
 			goto startbn
@@ -775,7 +747,7 @@ function clearbigfoot()
 		click(inbig_x,inbig_y)								
 		
 		::bigfoot::	
-		colorbigfoot(100)	
+		bigfoot_attacks(100)	
 		closeApp("com.z2live.battlenations1")	
 		main()
 	end
